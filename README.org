@@ -1,6 +1,24 @@
 #+title: Emacs SemVer
 
+[[https://garnix.io][https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Fsellout%2Femacs-semver]]
+[[https://repology.org/project/emacs-semver/versions][https://repology.org/badge/tiny-repos/emacs-semver.svg]]
+[[https://repology.org/project/emacs-semver/versions][https://repology.org/badge/latest-versions/emacs-semver.svg]]
+
 A library for using [[https://semver.org/][Semantic Versioning]] in Emacs.
+
+* usage
+
+* development environment
+
+We recommend the following steps to make working in this repository as easy as possible.
+
+** ~direnv allow~
+
+This command ensures that any work you do within this repository happens within a consistent reproducible environment. That environment provides various debugging tools, etc. When you leave this directory, you will leave that environment behind, so it doesn’t impact anything else on your system.
+
+** ~git config --local include.path ../.cache/git/config~
+
+This will apply our repository-specific Git configuration to ~git~ commands run against this repository. It’s lightweight (you should definitely look at it before applying this command) – it does things like telling ~git blame~ to ignore formatting-only commits.
 
 * building
 
@@ -10,30 +28,30 @@ Especially if you are unfamiliar with the Emacs ecosystem, there is a flake-base
 
 ** traditional
 
-This project is built with [[https://doublep.github.io/eldev/][Eldev]].
+This project offers an [[https://doublep.github.io/eldev/][Eldev]] build.
 
 * comparisons
 
 ** Emacs built-ins
 
-Emacs has some built-in versioning functionality. If you are not looking for [[httpsl://semver.org/][Semantic Versioning]] support specifically, that might be for you.
+Emacs has some built-in versioning functionality. If you aren’t looking for [[httpsl://semver.org/][Semantic Versioning]] support specifically, that might be for you.
 
 Some differences:
 
 - Emacs supports an arbitrary number of version components (SemVer has exactly three)
 - Emacs versions can start with a “.”, implying a leading zero
 - Emacs supports a wider variety of delimiters
-- Emacs has no equivalent of “build-metadata” (don’t mistake the “+” delimiter)
-- Emacs doesn’t require delimiters before pre-release identifiers (except if they are numeric)
+- Emacs has no notion of “build-metadata” (don’t mistake the “+” delimiter)
+- Emacs doesn’t require delimiters before pre-release identifiers (except if they’re numeric)
 - Emacs supports a limited, explicit set of pre-release labels, SemVer simply ASCII-sorts them
-- Emacs has multiple pre-release labels with the same precedence, in SemVer they are distinct unless they are identical
+- Emacs has many pre-release labels with the same precedence, in SemVer they’re distinct unless they’re identical
 - Emacs supports one pre-release label and/or one pre-release number, SemVer supports an arbitrary number of pre-release identifiers.
 
 There are various overlaps between Emacs & SemVer versions:
 
-** syntactic overlaps
+*** syntactic overlaps
 
-These are versions that can be parsed/produced by both systems, but they don’t necessarily mean the same things.
+These are versions that both systems can parse/produce, but they don’t necessarily mean the same things.
 
 - <major>.<minor>.<patch>
 - <major>.<minor>.<patch>-<label><n>
@@ -41,40 +59,40 @@ These are versions that can be parsed/produced by both systems, but they don’t
 
 where /major/, /minor/, /patch/, and /n/ are all non-negative integers without leading zeros. /m/ is similar, but allows leading zeros. /label/ is optional but if present, must be one of the following strings “snapshot”, “cvs”, “git”, “bzr”, “svn”, “hg”, “darcs”, “unknown”, “alpha”, “beta”, “pre”, or “rc”.
 
-** semantic overlaps
+*** semantic overlaps
 
 These are versions that may look different, but have the same meaning in both systems
 
 - <major>.<minor>.<patch>
 - <major>.<minor>.<patch>-<label> ⇔ <major>.<minor>.<patch><delim><label>
 
-Where /delim/ is one of “-”, “.”, “_”, “+”, a single space, or nothing, and you don’t need to choose the delimiter consistently (if you have some /n/, as listed below, you must have a delimiter in that case).
+Where ~delim~ is one of “-”, “.”, “_”, “+”, a single space, or nothing. You don’t need to choose the delimiter consistently (if you have some /n/, as listed below, you must have a delimiter in that case).
 
-Where /label/ is /not/ optional and needs to be from one of the following sets:
+Where /label/ /isn’t/ optional and needs to be from one of the following sets:
 
 - (snapshot | svn | unknown)
 - /n/, (cvs | git | bzr | hg | darcs), (pre | rc)
 - /n/, alpha, beta, (pre | rc)
 
-In these sets, /n/ represents a single pre-chosen non-negative integer without leading zeros. The selected set needs to sort in ASCII as listed here – you can use alternative capitalization, so long as it doesn’t affect the sort order. E.g.  “Alpha, beta” is a fine set, but “alpha, Beta” is not. Also, each label may be suffixed by an arbitrary fixed number. E.g., You can use “alpha32, beta7”, but once you choose those, you can’t use “alpha” or “alpha6” in the same set.
+In these sets, /n/ represents a single pre-chosen non-negative integer without leading zeros. The selected set needs to sort in ASCII as listed here – you can use alternative capitalization, so long as it doesn’t affect the sort order. For example, “Alpha, beta” is a fine set, but “alpha, Beta” isn’t. Also, each label may have an arbitrary fixed number as a suffix. For example, you can use “alpha32, beta7”, but once you choose those, you can’t use “alpha” or “alpha6” in the same set.
 
-** syntactic & semantic overlap
+*** syntactic & semantic overlap
 
-You can also have a single digit at the end of the chosen label set. E.g., 3.2.1-alpha < 3.2.1-alpha1 < ... < 3.2.1-alpha9 in both systems, but once you get to “alpha10”, they diverge (SemVer puts that between “alpha1” and “alpha2”, while Emacs puts it after “alpha9”.
+You can also have a single digit at the end of the chosen label set. For example, 3.2.1-alpha < 3.2.1-alpha1 < ... < 3.2.1-alpha9 in both systems. Once you get to “alpha10”, they diverge (SemVer puts that between “alpha1” and “alpha2”, while Emacs puts it after “alpha9”. You can get around this by always padding to the same number of digits (for the same label). For example, you could have “alpha01”–“alpha99”, but still “rc1”–“rc9”.
 
-Also, “alpha” and “alpha0” are handled differently. In Semver, alpha < alpha0, while in Emacs, alpha = alpha0.
+Also, “alpha” and “alpha0” are incompatible with each other. In SemVer, alpha < alpha0, while in Emacs, alpha = alpha0. So you must choose whether the zeroth version of a label has no numeric suffix or a padded zero suffix (like “alpha000”).
 
-And note that while the /ordering/ of the two systems is the same, they aren’t quite identical. SemVer treats “alpha7” as a single component while Emacs treats it as two components (with values -3 and 7). However, this generally shouldn’t be a concern, as the underlying types are different, you just can’t ~(apply 'make-semver-version emacs-version)~.
+And note that while the /ordering/ of the two systems is the same, they aren’t quite identical. SemVer treats “alpha7” as a single component while Emacs treats it as two components (with values –3 and 7). However, this shouldn’t be a concern, as the underlying types are different, you just can’t ~(apply 'make-semver-version emacs-version)~.
 
-** overlap tl;dr
+*** overlap tl;dr
 
-If you want to be compatible between the two systems, I suggest the following versions:
+If you want to be compatible between the two systems, The following versions are a good set:
 
 - <major>.<minor>.<patch>
-- <major>.<minor>.<patch>-rc[1-9]?
-- <major>.<minor>.<patch>-beta[1-9]?
-- <major>.<minor>.<patch>-alpha[1-9]?
+- <major>.<minor>.<patch>-rc[1–9]?
+- <major>.<minor>.<patch>-beta[1–9]?
+- <major>.<minor>.<patch>-alpha[1–9]?
 
-Given the same /major/, /minor/, and /patch/ numbers, these are in order from highest to lowest precedence. Note that if you have multiple alpha, beta, or rc versions, the two systems are not compatible. Emacs would require you to write “1.0.0-rc1”, whereas SemVer would have you write “1.0.0–rc.1”. I tiny but important distinction.
+Given the same /major/, /minor/, and /patch/ numbers, these are in order from highest to lowest precedence. Note that there is no delimiter between the “alpha”, “beta”, or “rc” labels and the following digit.
 
 This set of versions is also compatible with SemVer 1.0.0.
