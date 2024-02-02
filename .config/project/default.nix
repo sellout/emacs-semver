@@ -26,6 +26,8 @@
 
   ## formatting
   editorconfig.enable = true;
+  ## See the file for why this needs to force a different version.
+  project.file.".dir-locals.el".source = lib.mkForce ../emacs/.dir-locals.el;
   programs = {
     treefmt = {
       enable = true;
@@ -35,14 +37,12 @@
     };
     vale = {
       enable = true;
-      coreSettings.Vocab = "emacs-semver";
       excludes = [
         "*.el"
         "./.github/settings.yml"
-        "./.github/workflows/flakehub-publish.yml"
         "./Eldev"
       ];
-      vocab.emacs-semver.accept = config.programs.vale.vocab.base.accept ++ [
+      vocab.${config.project.name}.accept = [
         "ASCII"
         "bzr"
         "component"
@@ -58,8 +58,6 @@
   };
 
   ## CI
-  ## TODO: We currently need this file to exist in the various elisp checks.
-  ## project.file.".dir-locals.el".minimum-persistence = lib.mkForce "repository";
   services.garnix = {
     enable = true;
     builds.exclude = [

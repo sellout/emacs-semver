@@ -10,101 +10,104 @@
     ];
     ## Isolate the build.
     registries = false;
-    ## This is false to allow _noChroot checks to run.
-    sandbox = false;
+    sandbox = "relaxed";
   };
 
-  outputs = inputs: let
+  outputs = {
+    bash-strict-mode,
+    flake-utils,
+    flaky,
+    nixpkgs,
+    self,
+  }: let
     pname = "semver";
     ename = "emacs-${pname}";
+
+    supportedSystems = flaky.lib.defaultSystems;
   in
     {
       schemas = {
         inherit
-          (inputs.project-manager.schemas)
+          (flaky.schemas)
           overlays
           homeConfigurations
           packages
-          projectConfigurations
           devShells
+          projectConfigurations
           checks
           formatter
           ;
       };
 
       overlays = {
-        default = final: prev: {
-          emacsPackagesFor = emacs:
-            (prev.emacsPackagesFor emacs).overrideScope'
-            (inputs.self.overlays.emacs final prev);
-        };
+        default = flaky.lib.elisp.overlays.default self.overlays.emacs;
 
         emacs = final: prev: efinal: eprev: {
-          "${pname}" = inputs.self.packages.${final.system}.${ename};
+          "${pname}" = self.packages.${final.system}.${ename};
         };
       };
 
       homeConfigurations =
         builtins.listToAttrs
         (builtins.map
-          (inputs.flaky.lib.homeConfigurations.example
+          (flaky.lib.homeConfigurations.example
             ename
-            inputs.self
-            [./nix/home-manager-example.nix])
-          inputs.flake-utils.lib.defaultSystems);
+            self
+            [
+              ({pkgs, ...}: {
+                programs.emacs = {
+                  enable = true;
+                  extraConfig = ''
+                    (require '${pname})
+                  '';
+                  extraPackages = epkgs: [epkgs.${pname}];
+                };
+              })
+            ])
+          supportedSystems);
     }
-    // inputs.flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = import inputs.nixpkgs {
+    // flake-utils.lib.eachSystem supportedSystems (system: let
+      pkgs = import nixpkgs {
         inherit system;
-        overlays = [inputs.flaky.overlays.elisp-dependencies];
+        overlays = [
+          bash-strict-mode.overlays.default
+          flaky.overlays.elisp-dependencies
+        ];
       };
 
       src = pkgs.lib.cleanSource ./.;
     in {
       packages = {
-        default = inputs.self.packages.${system}.${ename};
-        "${ename}" = inputs.flaky.lib.elisp.package pkgs src pname (_: []);
+        default = self.packages.${system}.${ename};
+        "${ename}" = flaky.lib.elisp.package pkgs src pname (epkgs: [
+          epkgs.buttercup
+        ]);
       };
 
-      projectConfigurations = inputs.flaky.lib.projectConfigurations.default {
-        inherit pkgs;
-        inherit (inputs) self;
-      };
+      projectConfigurations =
+        flaky.lib.projectConfigurations.default {inherit pkgs self;};
 
       devShells =
-        inputs.self.projectConfigurations.${system}.devShells
-        // {
-          default =
-            inputs.bash-strict-mode.lib.checkedDrv pkgs
-            (pkgs.mkShell {
-              inputsFrom =
-                builtins.attrValues inputs.self.checks.${system}
-                ++ builtins.attrValues inputs.self.packages.${system};
-
-              nativeBuildInputs = [
-                # Nix language server,
-                # https://github.com/oxalica/nil#readme
-                pkgs.nil
-                # Bash language server,
-                # https://github.com/bash-lsp/bash-language-server#readme
-                pkgs.nodePackages.bash-language-server
-              ];
-            });
-        };
+        self.projectConfigurations.${system}.devShells
+        // {default = flaky.lib.devShells.default system self [] "";};
 
       checks =
-        inputs.self.projectConfigurations.${system}.checks
+        self.projectConfigurations.${system}.checks
         // {
-          elisp-doctor = inputs.flaky.lib.elisp.checks.doctor pkgs src;
-          elisp-lint = inputs.flaky.lib.elisp.checks.lint pkgs src (_: []);
+          elisp-doctor = flaky.lib.elisp.checks.doctor pkgs src;
+          elisp-lint = flaky.lib.elisp.checks.lint pkgs src (_: []);
         };
 
-      formatter = inputs.self.projectConfigurations.${system}.formatter;
+      formatter = self.projectConfigurations.${system}.formatter;
     });
 
   inputs = {
     bash-strict-mode = {
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        flaky.follows = "flaky";
+        nixpkgs.follows = "nixpkgs";
+      };
       url = "github:sellout/bash-strict-mode";
     };
 
@@ -115,20 +118,10 @@
         bash-strict-mode.follows = "bash-strict-mode";
         flake-utils.follows = "flake-utils";
         nixpkgs.follows = "nixpkgs";
-        project-manager.follows = "project-manager";
       };
       url = "github:sellout/flaky";
     };
 
-    nixpkgs.url = "github:NixOS/nixpkgs/release-23.05";
-
-    project-manager = {
-      inputs = {
-        bash-strict-mode.follows = "bash-strict-mode";
-        flaky.follows = "flaky";
-        nixpkgs.follows = "nixpkgs";
-      };
-      url = "github:sellout/project-manager";
-    };
+    nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
   };
 }
