@@ -34,7 +34,7 @@ This project offers an [[https://doublep.github.io/eldev/][Eldev]] build.
 
 ** Emacs built-ins
 
-Emacs has some built-in versioning functionality. If you aren’t looking for [[httpsl://semver.org/][Semantic Versioning]] support specifically, that might be for you.
+Emacs has some built-in versioning functionality. If you aren’t looking for [[https://semver.org/][Semantic Versioning]] support specifically, that might be for you.
 
 Some differences:
 
