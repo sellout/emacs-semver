@@ -1,0 +1,16 @@
+/result
+/source
+*.elc
+/.eldev
+/.cache/vale/*
+!/.cache/vale/config/
+/.cache/vale/config/*
+!/.cache/vale/config/vocabularies/
+/.cache/vale/config/vocabularies/*
+!/.cache/vale/config/vocabularies/emacs-semver/
+!/.cache/vale/Vocab/
+/.cache/vale/Vocab/*
+!/.cache/vale/Vocab/emacs-semver/
+/.local/state/project-manager/
+/.local/state/nix/profiles/
+/.cache/direnv/

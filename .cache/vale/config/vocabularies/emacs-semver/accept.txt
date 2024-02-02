@@ -1,0 +1,15 @@
+direnv
+garnix
+[Nn]ix
+Pfeil
+ShellCheck
+ASCII
+bzr
+component
+cvs
+darcs
+Eldev
+identical
+pre
+rc
+svn

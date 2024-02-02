@@ -51,9 +51,9 @@
             ename
             inputs.self
             [./nix/home-manager-example.nix])
-          inputs.flake-utils.lib.defaultSystems);
+          inputs.flaky.lib.defaultSystems);
     }
-    // inputs.flake-utils.lib.eachDefaultSystem (system: let
+    // inputs.flake-utils.lib.eachSystem inputs.flaky.lib.defaultSystems (system: let
       pkgs = import inputs.nixpkgs {
         inherit system;
         overlays = [inputs.flaky.overlays.elisp-dependencies];
@@ -126,7 +126,6 @@
       inputs = {
         bash-strict-mode.follows = "bash-strict-mode";
         flaky.follows = "flaky";
-        nixpkgs.follows = "nixpkgs";
       };
       url = "github:sellout/project-manager";
     };

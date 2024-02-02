@@ -35,14 +35,13 @@
     };
     vale = {
       enable = true;
-      coreSettings.Vocab = "emacs-semver";
       excludes = [
         "*.el"
         "./.github/settings.yml"
         "./.github/workflows/flakehub-publish.yml"
         "./Eldev"
       ];
-      vocab.emacs-semver.accept = config.programs.vale.vocab.base.accept ++ [
+      vocab.${config.project.name}.accept = [
         "ASCII"
         "bzr"
         "component"
