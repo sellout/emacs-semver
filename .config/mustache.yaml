@@ -1,0 +1,13 @@
+{
+  project:
+    {
+      description: "A library for using Semantic Versioning in Emacs.",
+      ## NB: This shouldn’t contain the `emacs-` prefix, as that will be added
+      ##     where necessary.
+      name: "semver",
+      repo: "sellout/emacs-semver",
+      summary: "Semantic versioning library",
+      version: "0.1.0",
+    },
+  type: { name: "emacs-lisp" },
+}

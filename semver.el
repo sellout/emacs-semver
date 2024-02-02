@@ -3,7 +3,7 @@
 ;; Author: Greg Pfeil <greg@technomadic.org>
 ;; Maintainer: Greg Pfeil <greg@technomadic.org>
 ;; Package-Requires: ((emacs "27.1"))
-;; URL: https://github.com/sellout/emacs-push-pop-done
+;; URL: https://github.com/sellout/emacs-semver
 ;; URL: https://semver.org/
 ;; Version: 0.1.0
 
