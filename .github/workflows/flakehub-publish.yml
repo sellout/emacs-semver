@@ -23,5 +23,5 @@ jobs:
       - uses: "DeterminateSystems/flakehub-push@main"
         with:
           visibility: "public"
-          name: "sellout/emacs-semver"
+          name: "sellout/semver"
           tag: "${{ inputs.tag }}"

@@ -14,16 +14,16 @@
   };
 
   outputs = {
-    bash-strict-mode,
     flake-utils,
     flaky,
     nixpkgs,
     self,
+    systems,
   }: let
     pname = "semver";
     ename = "emacs-${pname}";
 
-    supportedSystems = flaky.lib.defaultSystems;
+    supportedSystems = import systems;
   in
     {
       schemas = {
@@ -50,29 +50,21 @@
       homeConfigurations =
         builtins.listToAttrs
         (builtins.map
-          (flaky.lib.homeConfigurations.example
-            ename
-            self
-            [
-              ({pkgs, ...}: {
-                programs.emacs = {
-                  enable = true;
-                  extraConfig = ''
-                    (require '${pname})
-                  '';
-                  extraPackages = epkgs: [epkgs.${pname}];
-                };
-              })
-            ])
+          (flaky.lib.homeConfigurations.example self [
+            ({pkgs, ...}: {
+              programs.emacs = {
+                enable = true;
+                extraConfig = "(require '${pname})";
+                extraPackages = epkgs: [epkgs.${pname}];
+              };
+            })
+          ])
           supportedSystems);
     }
     // flake-utils.lib.eachSystem supportedSystems (system: let
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [
-          bash-strict-mode.overlays.default
-          flaky.overlays.elisp-dependencies
-        ];
+        overlays = [flaky.overlays.elisp-dependencies];
       };
 
       src = pkgs.lib.cleanSource ./.;
@@ -102,26 +94,11 @@
     });
 
   inputs = {
-    bash-strict-mode = {
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        flaky.follows = "flaky";
-        nixpkgs.follows = "nixpkgs";
-      };
-      url = "github:sellout/bash-strict-mode";
-    };
+    ## Flaky should generally be the source of truth for its inputs.
+    flaky.url = "github:sellout/flaky";
 
-    flake-utils.url = "github:numtide/flake-utils";
-
-    flaky = {
-      inputs = {
-        bash-strict-mode.follows = "bash-strict-mode";
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
-      url = "github:sellout/flaky";
-    };
-
-    nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
+    flake-utils.follows = "flaky/flake-utils";
+    nixpkgs.follows = "flaky/nixpkgs";
+    systems.follows = "flaky/systems";
   };
 }

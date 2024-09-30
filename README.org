@@ -1,8 +1,9 @@
 #+title: Emacs SemVer
 
-[[https://garnix.io][https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Fsellout%2Femacs-semver]]
-[[https://repology.org/project/emacs-semver/versions][https://repology.org/badge/tiny-repos/emacs-semver.svg]]
-[[https://repology.org/project/emacs-semver/versions][https://repology.org/badge/latest-versions/emacs-semver.svg]]
+#+ATTR_HTML: :alt built with garnix
+[[https://garnix.io/repo/sellout/emacs-semver][https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Fsellout%2Femacs-semver]]
+[[https://repology.org/project/emacs:semver/versions][https://repology.org/badge/tiny-repos/emacs:semver.svg]]
+[[https://repology.org/project/emacs:semver/versions][https://repology.org/badge/latest-versions/emacs:semver.svg]]
 
 A library for using [[https://semver.org/][Semantic Versioning]] in Emacs.
 
