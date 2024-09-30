@@ -1,7 +1,7 @@
 /.cache/git/config linguist-generated
 /.cache/git/hooks/pre-push linguist-generated
-/.cache/vale/Vocab/emacs-semver/accept.txt linguist-generated
-/.cache/vale/config/vocabularies/emacs-semver/accept.txt linguist-generated
+/.cache/vale/Vocab/semver/accept.txt linguist-generated
+/.cache/vale/config/vocabularies/semver/accept.txt linguist-generated
 /.dir-locals.el linguist-generated
 /.editorconfig linguist-generated
 /.envrc linguist-generated

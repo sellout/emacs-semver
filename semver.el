@@ -1,7 +1,7 @@
 ;;; semver.el --- Semantic versioning library  -*- lexical-binding: t; -*-
 
 ;; Author: Greg Pfeil <greg@technomadic.org>
-;; Maintainer: Greg Pfeil <greg@technomadic.org>
+;; Keywords: tools, vc
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/sellout/emacs-semver
 ;; URL: https://semver.org/

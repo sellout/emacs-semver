@@ -7,7 +7,6 @@
       name: "semver",
       repo: "sellout/emacs-semver",
       summary: "Semantic versioning library",
-      version: "0.1.0",
     },
   type: { name: "emacs-lisp" },
 }

@@ -7,10 +7,10 @@
 /.cache/vale/config/*
 !/.cache/vale/config/vocabularies/
 /.cache/vale/config/vocabularies/*
-!/.cache/vale/config/vocabularies/emacs-semver/
+!/.cache/vale/config/vocabularies/semver/
 !/.cache/vale/Vocab/
 /.cache/vale/Vocab/*
-!/.cache/vale/Vocab/emacs-semver/
+!/.cache/vale/Vocab/semver/
 /.local/state/project-manager/
 /.local/state/nix/profiles/
 /.cache/direnv/
